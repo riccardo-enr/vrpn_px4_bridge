@@ -77,6 +77,41 @@ also consume `/vrpn_mocap/<tracker>/twist` if you want velocity fusion.
 
 ## Test
 
+**Unit (offline, no mocap, no ROS running).** `test/test_frame_transforms.cpp`
+checks position and attitude conversion plus the sanitizers. Attitude is
+verified by comparing rotation *matrices* against an independent reference
+`R_ned = C R_enu C^T` (sign-safe), with a 20k-case random sweep and degenerate/
+NaN/inf boundary cases.
+
 ```shell
 colcon test --packages-select vrpn_px4_bridge
+colcon test-result --verbose
 ```
+
+**End-to-end (running node, still no mocap).** `test/live_check.py` injects
+synthetic poses on the input topic and validates the emitted VehicleOdometry
+(conversion, `pose_frame`, NaN velocity, invalid-quaternion handling,
+timestamp). Two terminals:
+
+```shell
+# terminal 1
+ros2 launch vrpn_px4_bridge vrpn_px4_bridge.launch.py tracker:=drone1
+# terminal 2
+python3 src/vrpn_px4_bridge/test/live_check.py --ros-args -p tracker:=drone1
+```
+
+## Editor errors (clangd "file not found")
+
+Red squiggles like `'rclcpp/rclcpp.hpp' file not found` are the editor's
+language server not knowing the ROS include paths — not real build errors.
+Generate a compile database and point clangd at it:
+
+```shell
+colcon build --packages-select vrpn_px4_bridge \
+  --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+ln -sf ../../build/vrpn_px4_bridge/compile_commands.json \
+  src/vrpn_px4_bridge/compile_commands.json
+```
+
+Then reload the editor. (`source /opt/ros/$ROS_DISTRO/setup.bash` before
+building so the headers exist.)

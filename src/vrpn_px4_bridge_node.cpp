@@ -61,8 +61,8 @@ private:
     odom.timestamp_sample = t_us;
     odom.pose_frame = px4_msgs::msg::VehicleOdometry::POSE_FRAME_NED;
 
-    odom.position = enu_to_ned_pos(p.x, p.y, p.z);
-    odom.q = enu_to_ned_quat(q.w, q.x, q.y, q.z);
+    odom.position = sanitize_pos(enu_to_ned_pos(p.x, p.y, p.z));
+    odom.q = normalize_or_invalidate(enu_to_ned_quat(q.w, q.x, q.y, q.z));
 
     // We only carry pose; tell EKF2 to ignore velocity by marking it invalid.
     const float nan = std::numeric_limits<float>::quiet_NaN();
