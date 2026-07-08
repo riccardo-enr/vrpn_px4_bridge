@@ -1,5 +1,9 @@
 # vrpn_px4_bridge
 
+[![ci](https://github.com/riccardo-enr/vrpn_px4_bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/riccardo-enr/vrpn_px4_bridge/actions/workflows/ci.yml)
+[![ROS 2 Jazzy](https://img.shields.io/badge/ROS_2-Jazzy-22314E?logo=ros)](https://docs.ros.org/en/jazzy/)
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](LICENSE)
+
 ROS 2 C++ node that relays motion-capture pose from
 [`vrpn_mocap`](https://github.com/alvinsunyixiao/vrpn_mocap) (Vicon Tracker or
 OptiTrack Motive over VRPN) to PX4 as external vision, converting the mocap
