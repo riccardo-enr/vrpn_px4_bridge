@@ -26,9 +26,8 @@ install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
-
+  # Code style is enforced by the project's own clang-format config, not the
+  # ROS ament linters (they conflict). Only the behavioural gtest runs here.
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_frame_transforms test/test_frame_transforms.cpp)
   target_include_directories(test_frame_transforms PRIVATE
