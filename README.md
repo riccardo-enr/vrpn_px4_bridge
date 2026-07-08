@@ -25,7 +25,8 @@ Motive/Vicon (VRPN) -> vrpn_mocap -> /vrpn_mocap/<tracker>/pose
 
 - ROS 2 (Humble / Jazzy), `rclcpp`, `geometry_msgs`
 - [`px4_msgs`](https://github.com/PX4/px4_msgs) in your workspace
-- [`vrpn_mocap`](https://github.com/alvinsunyixiao/vrpn_mocap) running (`ros-$ROS_DISTRO-vrpn-mocap`)
+- [`vrpn_mocap`](https://github.com/alvinsunyixiao/vrpn_mocap) running
+  (`ros-$ROS_DISTRO-vrpn-mocap`)
 
 ## Build
 
@@ -51,11 +52,11 @@ ros2 launch vrpn_px4_bridge vrpn_px4_bridge.launch.py tracker:=drone1
 
 ### Parameters
 
-| Parameter      | Default                              | Description                          |
-|----------------|--------------------------------------|--------------------------------------|
-| `tracker`      | `drone1`                             | vrpn rigid-body name                 |
-| `input_topic`  | `/vrpn_mocap/<tracker>/pose`         | override the input pose topic        |
-| `output_topic` | `/fmu/in/vehicle_visual_odometry`    | override the PX4 odometry topic      |
+| Parameter      | Default                           | Description                     |
+| -------------- | --------------------------------- | ------------------------------- |
+| `tracker`      | `drone1`                          | vrpn rigid-body name            |
+| `input_topic`  | `/vrpn_mocap/<tracker>/pose`      | override the input pose topic   |
+| `output_topic` | `/fmu/in/vehicle_visual_odometry` | override the PX4 odometry topic |
 
 ## Frames
 
@@ -83,7 +84,7 @@ also consume `/vrpn_mocap/<tracker>/twist` if you want velocity fusion.
 
 **Unit (offline, no mocap, no ROS running).** `test/test_frame_transforms.cpp`
 checks position and attitude conversion plus the sanitizers. Attitude is
-verified by comparing rotation *matrices* against an independent reference
+verified by comparing rotation _matrices_ against an independent reference
 `R_ned = C R_enu C^T` (sign-safe), with a 20k-case random sweep and degenerate/
 NaN/inf boundary cases.
 
@@ -103,19 +104,3 @@ ros2 launch vrpn_px4_bridge vrpn_px4_bridge.launch.py tracker:=drone1
 # terminal 2
 python3 src/vrpn_px4_bridge/test/live_check.py --ros-args -p tracker:=drone1
 ```
-
-## Editor errors (clangd "file not found")
-
-Red squiggles like `'rclcpp/rclcpp.hpp' file not found` are the editor's
-language server not knowing the ROS include paths — not real build errors.
-Generate a compile database and point clangd at it:
-
-```shell
-colcon build --packages-select vrpn_px4_bridge \
-  --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-ln -sf ../../build/vrpn_px4_bridge/compile_commands.json \
-  src/vrpn_px4_bridge/compile_commands.json
-```
-
-Then reload the editor. (`source /opt/ros/$ROS_DISTRO/setup.bash` before
-building so the headers exist.)
