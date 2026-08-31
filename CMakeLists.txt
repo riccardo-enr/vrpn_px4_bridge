@@ -11,13 +11,14 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(px4_msgs REQUIRED)
 
 add_executable(vrpn_px4_bridge_node src/vrpn_px4_bridge_node.cpp)
 target_include_directories(vrpn_px4_bridge_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(vrpn_px4_bridge_node rclcpp geometry_msgs px4_msgs)
+ament_target_dependencies(vrpn_px4_bridge_node rclcpp geometry_msgs nav_msgs px4_msgs)
 
 install(TARGETS vrpn_px4_bridge_node
   DESTINATION lib/${PROJECT_NAME})
